@@ -21,7 +21,7 @@ const userSlice = createSlice({
       nextState.status = RequestStatus.PENDING;
     });
     builder.addCase(fetchUser.fulfilled, (nextState, action) => {
-      nextState.data = action.payload;
+      nextState.data = {...action.payload, profileImage : action.payload["profile-image"]};
       nextState.status = RequestStatus.SUCCESSFULL;
     });
     builder.addCase(fetchUser.rejected, nextState => {

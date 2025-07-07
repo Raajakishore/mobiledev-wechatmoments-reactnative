@@ -8,7 +8,7 @@ export const fetchUserTweets = createAsyncThunk(
   'userTweets',
   async (username: string, thunkAPI) => {
     try {
-      const response = await getRequest(`user/${username}/tweets`);
+      const response = await getRequest(`tweets.json`);
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
           new AxiosError(`Request error: ${response.status} code`),

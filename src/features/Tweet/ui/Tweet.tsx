@@ -44,7 +44,7 @@ export function Tweet({tweet}: ITweetProps): ReactElement {
             {tweet.images.map((image, index) => (
               <Image
                 testID="tweet-image"
-                key={image?.url || `image-${index}`}
+                key={ `image-${index}` }
                 style={styles.image}
                 source={{
                   uri: image?.url || '',

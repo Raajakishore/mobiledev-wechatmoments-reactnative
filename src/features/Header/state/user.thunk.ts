@@ -8,7 +8,7 @@ export const fetchUser = createAsyncThunk(
   'user',
   async (username: string, thunkAPI) => {
     try {
-      const response = await getRequest(`user/${username}`);
+      const response = await getRequest(`user.json`);
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
           new AxiosError(`Request error: ${response.status} code`),

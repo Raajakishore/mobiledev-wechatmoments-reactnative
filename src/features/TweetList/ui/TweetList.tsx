@@ -1,5 +1,5 @@
 import React, {ReactElement, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {RefreshControl, StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 
@@ -19,11 +19,29 @@ function TweetListComponent({tweets}: ITweetListProps): ReactElement {
     dispatch(fetchUserTweets('jsmith'));
   }, [dispatch]);
 
+  const onEndReached = () => {
+
+  }
+
+  const onRefresh = () => {
+    console.log("onOrefresh called");
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
         data={tweets}
         renderItem={tweet => <Tweet tweet={tweet.item} />}
+        initialNumToRender={5}
+        onEndReached={ onEndReached }
+        refreshControl={ 
+          <RefreshControl 
+            refreshing = { false }
+            colors = {["red"]}
+            onRefresh = {onRefresh}
+
+          />
+        }
       />
     </View>
   );

@@ -9,3 +9,8 @@ export const store = configureStore({
     user: userReducer,
   },
 });
+
+const unsubscribe = store.subscribe(() => {
+  const state = store.getState();
+  console.log('Store changed:', state);
+});
