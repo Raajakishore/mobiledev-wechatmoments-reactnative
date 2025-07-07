@@ -3,43 +3,48 @@ import {RefreshControl, StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 
-import {BasicStyle, ITweet, RootState} from './../../../types';
+import {BasicStyle, ITweet, RequestStatus, RootState} from './../../../types';
 import {Tweet} from './../../../features/Tweet/ui/Tweet';
 import {useAppDispatch} from './../../../hooks';
 import {fetchUserTweets} from './../../../features/TweetList/state/tweets.thunk';
 
 interface ITweetListProps {
   tweets: Array<ITweet>;
+  loading: RequestStatus;
 }
 
-function TweetListComponent({tweets}: ITweetListProps): ReactElement {
+export function TweetListComponent({tweets, loading}: ITweetListProps): ReactElement {
   const dispatch = useAppDispatch();
+  const [itemsToShow, setItemsToShow] = React.useState<number>(5);
+  
 
   useEffect(() => {
     dispatch(fetchUserTweets('jsmith'));
   }, [dispatch]);
 
   const onEndReached = () => {
-
+    if(itemsToShow < tweets.length) {
+      setItemsToShow(itemsToShow + 5);
+    }
   }
 
   const onRefresh = () => {
-    console.log("onOrefresh called");
+    dispatch(fetchUserTweets('jsmith'));
+    setItemsToShow(5);
   }
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={tweets}
+        data={tweets.slice(0, itemsToShow)}
         renderItem={tweet => <Tweet tweet={tweet.item} />}
         initialNumToRender={5}
         onEndReached={ onEndReached }
         refreshControl={ 
           <RefreshControl 
-            refreshing = { false }
+            refreshing = { RequestStatus.PENDING === loading }
             colors = {["red"]}
             onRefresh = {onRefresh}
-
           />
         }
       />
@@ -50,6 +55,7 @@ function TweetListComponent({tweets}: ITweetListProps): ReactElement {
 const mapStateToProps = (state: RootState) =>
   ({
     tweets: state.tweets.data,
+    loading: state.tweets.status
   } as ITweetListProps);
 
 export const TweetList = connect(mapStateToProps)(TweetListComponent);
