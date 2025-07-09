@@ -1,6 +1,5 @@
 import React, {ReactElement, useEffect} from 'react';
-import {RefreshControl, StyleSheet, View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {RefreshControl, StyleSheet, View, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
 import {BasicStyle, ITweet, RequestStatus, RootState} from './../../../types';
@@ -36,6 +35,7 @@ export function TweetListComponent({tweets, loading}: ITweetListProps): ReactEle
   return (
     <View style={styles.container}>
       <FlatList
+      testID='flatlist'
         data={tweets.slice(0, itemsToShow)}
         renderItem={tweet => <Tweet tweet={tweet.item} />}
         initialNumToRender={5}

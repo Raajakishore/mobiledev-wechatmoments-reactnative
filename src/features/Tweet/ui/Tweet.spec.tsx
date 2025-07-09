@@ -1,6 +1,5 @@
-import renderer from 'react-test-renderer';
 import React from 'react';
-
+import { render } from '@testing-library/react-native';
 import {Tweet} from './Tweet';
 import {ITweet} from '../../../types';
 
@@ -14,25 +13,26 @@ describe('Tweet', () => {
     content: 'tweet content',
     images: [{url: 'image1.url'}, {url: 'image2.url'}],
   };
-  it('should render component', () => {
-    const component = renderer.create(<Tweet tweet={testTweet} />);
-    const containerElement = component.root.findByProps({
-      testID: 'tweet-wrapper',
-    });
-    expect(containerElement).toBeTruthy();
+  
+  test("should render the component ", ()=>{
+    const component = render(<Tweet tweet = {testTweet} />);
+    expect(component.getByTestId("tweet-wrapper")).toBeTruthy();
   });
-  it('should render the right content', () => {
-    const component = renderer.create(<Tweet tweet={testTweet} />);
-    const element = component.root.findByProps({
-      testID: 'tweet-content',
-    });
-    expect(element.props.children).toBe('tweet content');
+
+  test("should render the avatar ", ()=>{
+    const component = render(<Tweet tweet = {testTweet} />);
+    expect(component.getByTestId("tweet-avatar")).toBeTruthy();
   });
-  it('should render the images container if the tweet has images', () => {
-    const component = renderer.create(<Tweet tweet={testTweet} />);
-    const containerElement = component.root.findByProps({
-      testID: 'tweet-images-wrapper',
-    });
-    expect(containerElement).toBeTruthy();
+
+  test("should render the tweet content ", ()=>{
+    const component = render(<Tweet tweet = {testTweet} />);
+    expect(component.getByText("tweet content"));
   });
+
+    test("should render all tweet images  ", ()=>{
+    const component = render(<Tweet tweet = {testTweet} />);
+    expect(component.getAllByTestId("tweet-image")).toHaveLength(2);
+  });
+
+
 });

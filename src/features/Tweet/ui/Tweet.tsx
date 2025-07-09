@@ -21,6 +21,7 @@ export function Tweet({tweet}: ITweetProps): ReactElement {
   return (
     <View testID="tweet-wrapper" style={styles.container}>
       <Image
+        testID='tweet-avatar'
         style={styles.image}
         source={{
           uri: tweet?.sender?.avatar || '',
