@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect} from 'react';
+import React, {ReactElement, useCallback, useEffect} from 'react';
 import {RefreshControl, StyleSheet, View, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
@@ -21,24 +21,32 @@ export function TweetListComponent({tweets, loading}: ITweetListProps): ReactEle
     dispatch(fetchUserTweets('jsmith'));
   }, [dispatch]);
 
-  const onEndReached = () => {
-    if(itemsToShow < tweets.length) {
-      setItemsToShow(itemsToShow + 5);
+  const onEndReached = useCallback(() => {
+    if (itemsToShow < tweets.length) {
+      setItemsToShow(prev => prev + 5);
     }
-  }
+  }, [itemsToShow, tweets]);
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     dispatch(fetchUserTweets('jsmith'));
     setItemsToShow(5);
-  }
+  }, [dispatch]);
+
+  const renderTweet = useCallback(
+    ({ item }: { item: ITweet }) => <Tweet tweet={item} />,
+    []
+  );
 
   return (
     <View style={styles.container}>
       <FlatList
       testID='flatlist'
         data={tweets.slice(0, itemsToShow)}
-        renderItem={tweet => <Tweet tweet={tweet.item} />}
+         keyExtractor={(_, index) => index.toString()}
+        renderItem={renderTweet}
         initialNumToRender={5}
+        maxToRenderPerBatch={10}
+        windowSize={5}
         onEndReached={ onEndReached }
         refreshControl={ 
           <RefreshControl 
