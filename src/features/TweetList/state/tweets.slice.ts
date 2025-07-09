@@ -21,7 +21,7 @@ const tweetsSlice = createSlice({
       nextState.status = RequestStatus.PENDING;
     });
     builder.addCase(fetchUserTweets.fulfilled, (nextState, action) => {
-      nextState.data = action.payload;
+      nextState.data = action.payload.filter(item=> item?.sender);
       nextState.status = RequestStatus.SUCCESSFULL;
     });
     builder.addCase(fetchUserTweets.rejected, nextState => {
